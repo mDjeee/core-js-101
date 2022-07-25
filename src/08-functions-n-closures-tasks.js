@@ -113,8 +113,18 @@ function memoize(fn) {
  * }, 2);
  * retryer() => 2
  */
-function retry(/* func, attempts */) {
+function retry(/* fn, attempts */) {
   throw new Error('Not implemented');
+  // let counter = attempts;
+  // return function retrier() {
+  //   counter -= 1;
+  //   try {
+  //     fn();
+  //   } catch (e) {
+  //     return counter ? retrier() : 0;
+  //   }
+  //   return attempts;
+  // };
 }
 
 
@@ -141,12 +151,13 @@ function retry(/* func, attempts */) {
  * cos(3.141592653589793) ends
  *
  */
-function logger(/* func, logFunc */) {
-  throw new Error('Not implemented');
-  // logFunc(`${func.name}(${argsArr}) starts`);
-  // const res = func()
-  // logFunc(`${func.name}(${argsArr}) ends`);
-  // return func
+function logger(func, logFunc) {
+  return function wrapper(...args) {
+    logFunc(`${func.name}(${JSON.stringify(args).slice(1, -1)}) starts`);
+    const res = func(...args);
+    logFunc(`${func.name}(${JSON.stringify(args).slice(1, -1)}) ends`);
+    return res;
+  };
 }
 
 
@@ -185,8 +196,12 @@ function partialUsingArguments(fn, ...args) {
  *   getId4() => 7
  *   getId10() => 11
  */
-function getIdGeneratorFunction(/* startFrom */) {
-  throw new Error('Not implemented');
+function getIdGeneratorFunction(startFrom) {
+  let n = startFrom - 1;
+  return () => {
+    n += 1;
+    return n;
+  };
 }
 
 
